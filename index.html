@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Valyza — Triagem de funções cognitivas e executivas</title>
+<style>
+:root{--n:#0B2545;--t:#13A89E;--tl:#E6F6F5;--g:#5B6B7B;--bg:#F6F9FA}
+*{box-sizing:border-box}
+body{margin:0;font-family:system-ui,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--n);line-height:1.5}
+main{max-width:640px;margin:0 auto;padding:24px 16px 48px}
+h1{font-size:1.6rem;margin:.2em 0}h2{font-size:1.15rem;margin:1.4em 0 .4em}
+.card{background:#fff;border-radius:16px;padding:24px;box-shadow:0 2px 12px #0b254514}
+.btn{display:block;width:100%;text-align:left;padding:14px 16px;margin:8px 0;border:1.5px solid #cfdde2;border-radius:12px;background:#fff;color:var(--n);font-size:1rem;cursor:pointer}
+.btn:hover{border-color:var(--t);background:var(--tl)}
+.pri{background:var(--t);color:#fff;border:0;text-align:center;font-weight:600}
+.pri:hover{background:#0f8f86}
+input{width:100%;padding:12px;border:1.5px solid #cfdde2;border-radius:12px;font-size:1rem;margin:6px 0 12px}
+.bar{height:8px;background:#dbe7ea;border-radius:8px;overflow:hidden;margin:0 0 20px}
+.bar i{display:block;height:100%;background:var(--t);transition:width .3s}
+.q{font-size:1.2rem;font-weight:600;margin:12px 0 18px}
+.sm{color:var(--g);font-size:.9rem}
+.lnk{background:none;border:0;color:var(--g);cursor:pointer;margin-top:12px;font-size:.95rem}
+.dom{margin:18px 0}.dom b{display:flex;justify-content:space-between}
+.tr{height:10px;background:#dbe7ea;border-radius:8px;margin:6px 0}.tr i{display:block;height:100%;border-radius:8px}
+.aviso{background:var(--tl);border-radius:12px;padding:14px;font-size:.9rem;margin-top:20px}
+</style>
+</head>
+<body>
+<main><div id="app"></div></main>
+<script>
+// ---------- PERGUNTAS ----------  (? = Sim/Não/Não sei com sinal de atenção; ~ = Sim/Não/Não sei sem sinal)
+const C=[
+"[nome] tem dificuldade de manter a atenção em uma tarefa pelo tempo esperado.",
+"Distrai-se com facilidade com barulhos ou movimentos ao redor.",
+"Parece não ouvir quando falam diretamente com [nome].",
+"Perde objetos de uso diário (óculos, chaves, celular, material).",
+"Deixa atividades pela metade e passa para outra.",
+"Comete erros por descuido em tarefas que já sabe fazer.",
+"Esquece o que acabou de ser dito ou combinado.",
+"Esquece compromissos, recados ou tarefas do dia.",
+"Repete a mesma pergunta ou a mesma história em pouco tempo.",
+"Tem dificuldade de lembrar onde guardou as coisas.",
+"Precisa de lembretes frequentes para recordar rotinas que já conhece.",
+"Tem dificuldade de começar tarefas sem ser lembrado(a).",
+"Tem dificuldade de organizar os passos para concluir uma tarefa.",
+"Perde prazos ou horários por dificuldade de planejar o tempo.",
+"Reage com dificuldade a mudanças de planos ou de rotina.",
+"Age sem pensar nas consequências.",
+"Tem dificuldade de esperar a vez ou de controlar impulsos.",
+"Tem dificuldade de manter pertences e ambiente organizados.",
+"Fica “travado(a)” diante de um problema novo.",
+"Tem dificuldade de controlar emoções (irritação, choro, frustração) no dia a dia.",
+"Precisa de ajuda em tarefas diárias que seriam esperadas sozinho(a) (higiene, vestir-se, refeições).",
+"A rotina da casa é prejudicada pelas dificuldades [de nome].",
+"Tem dificuldade de seguir instruções com mais de um passo.",
+"Demora mais do que o esperado para concluir tarefas simples.",
+"Tem dificuldade de se adaptar a ambientes novos ou com muitas pessoas.",
+"Dorme mal ou tem sono irregular.",
+"Demonstra cansaço mental ou lentidão em atividades que exigem raciocínio.",
+"Mostra frustração ou desânimo por causa das próprias dificuldades.",
+"?As dificuldades pioraram nos últimos 6 meses?",
+"?Familiares, escola, trabalho ou cuidadores já comentaram sobre essas dificuldades?"];
+const A=[
+"?Houve intercorrências na gestação, no parto ou nascimento prematuro?",
+"?Houve atraso na fala ou no andar nos primeiros anos?",
+"?Já teve convulsões, traumatismo craniano ou outra condição neurológica diagnosticada?",
+"?Existe diagnóstico prévio de TDAH, autismo, dislexia ou outro transtorno do neurodesenvolvimento?",
+"?Há casos de TDAH, autismo ou dificuldades de aprendizagem na família?",
+"?Faz ou já fez acompanhamento com psicólogo, fonoaudiólogo, neuropediatra ou terapeuta ocupacional?",
+"Mexe mãos e pés ou se remexe na cadeira.",
+"Tem dificuldade de permanecer sentado(a) quando é esperado.",
+"Fala em excesso ou interrompe os outros.",
+"Parece estar sempre agitado(a), como se não conseguisse parar.",
+"Evita contato visual ou o mantém por pouco tempo.",
+"Tem dificuldade de fazer amizades ou de manter brincadeiras em grupo.",
+"Interpreta de forma muito literal piadas, ironias ou expressões.",
+"Tem interesses muito intensos ou restritos a poucos assuntos.",
+"Faz movimentos repetitivos (balançar, bater as mãos) ou segue rituais rígidos.",
+"Incomoda-se muito com sons, texturas, cheiros, luzes ou etiquetas de roupa.",
+"Tem dificuldade de leitura ou escrita acima do esperado para a série.",
+"Tem dificuldade com cálculos e raciocínio matemático.",
+"O desempenho escolar é inferior ao que sua capacidade parece permitir.",
+"?A escola já relatou dificuldades de atenção, comportamento ou aprendizagem?",
+"Aprendeu a ler, contar ou outras habilidades muito antes dos colegas.",
+"Faz perguntas profundas ou avançadas para a idade.",
+"Tem memória notável para detalhes de assuntos de interesse.",
+"Entedia-se com facilidade em atividades consideradas fáceis.",
+"Demonstra criatividade ou soluções originais para problemas.",
+"Prefere conversar com pessoas mais velhas do que com as da própria idade.",
+"Tem crises intensas de choro ou raiva difíceis de acalmar.",
+"Mostra ansiedade excessiva, medo de errar ou perfeccionismo.",
+"Tem dificuldade de se separar dos responsáveis ou de lidar com novidades.",
+"O uso de telas atrapalha a rotina, o sono ou as tarefas."];
+const B=[
+"?Já teve AVC, traumatismo craniano ou convulsões?",
+"?Existe diagnóstico de Parkinson, Alzheimer, demência ou comprometimento cognitivo leve?",
+"?Há casos de demência ou Alzheimer na família?",
+"?Usa 5 ou mais medicamentos por dia?",
+"?Tem perda de audição ou de visão sem correção adequada?",
+"?Houve internação ou cirurgia recente seguida de mudança na clareza mental ou na memória?",
+"Esquece nomes de pessoas próximas.",
+"Perde-se em lugares conhecidos.",
+"Confunde dia, data ou horário.",
+"Esquece de tomar medicamentos ou precisa de lembretes para isso.",
+"Esquece eventos recentes importantes (conversas, visitas).",
+"Tem dificuldade de encontrar palavras durante a conversa.",
+"Tem dificuldade de lidar com dinheiro, contas ou compras.",
+"Tem dificuldade de usar celular, TV ou eletrodomésticos que já usava.",
+"Esquece o fogão ligado ou tem dificuldade de preparar refeições com segurança.",
+"Precisa de ajuda para banho, vestir-se ou higiene.",
+"Tem dificuldade de organizar a casa ou a rotina.",
+"Tem dificuldade de sair sozinho(a) e voltar com segurança.",
+"Toma decisões fora do seu padrão anterior ou sem avaliar riscos.",
+"Tem dificuldade de planejar atividades com vários passos (viagem, consultas).",
+"Raciocina mais devagar para resolver problemas simples.",
+"Tem dificuldade de acompanhar uma conversa com várias pessoas ou de alternar entre duas atividades.",
+"Mostra apatia ou perda de interesse por atividades de que gostava.",
+"Está mais irritado(a), desconfiado(a) ou ansioso(a) do que antes.",
+"Tem sono ruim ou inverte o dia pela noite.",
+"Relata ou aparenta ver ou ouvir coisas que não existem.",
+"Tem quedas, tontura ou desequilíbrio.",
+"?Houve piora perceptível nos últimos 1 ou 2 anos?",
+"?As mudanças vêm piorando aos poucos, sem melhora?",
+"?A família precisa supervisionar com frequência por segurança?"];
+const AD=[
+"?Já teve traumatismo craniano, AVC, convulsões ou outra condição neurológica diagnosticada?",
+"?Tem diagnóstico prévio de TDAH, autismo ou outra condição do neurodesenvolvimento?",
+"?Já fez avaliação psicológica ou neuropsicológica por dificuldades de atenção ou memória?",
+"?Há familiares com TDAH, autismo ou outras condições do neurodesenvolvimento?",
+"?Usa ou já usou medicação para atenção, humor ou sono?",
+"?Teve dificuldades de atenção ou de aprendizagem na infância ou na escola?",
+"Tenho dificuldade de manter o foco em tarefas longas ou repetitivas.",
+"Distraio-me com facilidade com pensamentos ou estímulos ao redor.",
+"Perco o fio da conversa ou “desligo” quando falam comigo.",
+"Perco chaves, celular ou documentos.",
+"Cometo erros por falta de atenção a detalhes no trabalho ou nos estudos.",
+"Começo várias coisas e termino poucas.",
+"Evito ou adio tarefas que exigem esforço mental prolongado.",
+"Sinto inquietação interna ou dificuldade de relaxar.",
+"Mexo pernas ou mãos, ou me levanto quando preciso ficar sentado(a).",
+"Interrompo os outros ou completo suas frases.",
+"Tomo decisões ou faço compras por impulso e depois me arrependo.",
+"Falo mais do que pretendia ou tenho dificuldade de esperar minha vez.",
+"Esqueço compromissos, prazos ou o que ia fazer ao entrar em um cômodo.",
+"Esqueço o que acabei de ler ou ouvir.",
+"Preciso de listas, alarmes ou lembretes para não esquecer as coisas.",
+"Esqueço nomes de pessoas que conheço.",
+"Tenho dificuldade de lembrar instruções com vários passos.",
+"?Sinto que minha memória ou concentração piorou nos últimos anos?",
+"Tenho dificuldade de começar tarefas, mesmo as importantes.",
+"Tenho dificuldade de planejar e dividir projetos em etapas.",
+"Subestimo o tempo que as tarefas levam e me atraso com frequência.",
+"Tenho dificuldade de definir o que é prioridade.",
+"Tenho dificuldade de lidar com imprevistos ou mudanças de plano.",
+"Tenho dificuldade de alternar entre tarefas.",
+"Meu ambiente, meus documentos ou minhas finanças ficam desorganizados.",
+"Minhas emoções são intensas ou difíceis de regular (irritação, frustração).",
+"Tenho ideias e planos, mas dificuldade de transformá-los em ação.",
+"Tenho dificuldade de manter rotinas (sono, alimentação, contas).",
+"Esqueço de pagar contas ou de cumprir obrigações administrativas.",
+"Minhas dificuldades prejudicam meu desempenho profissional ou acadêmico.",
+"Minhas dificuldades afetam meus relacionamentos ou a convivência em casa.",
+"Termino o dia exausto(a) mentalmente por me esforçar mais do que os outros para fazer o mesmo.",
+"Tenho dificuldade de entender intenções, ironias ou duplo sentido.",
+"Cansa-me muito socializar e preciso de tempo sozinho(a) para me recuperar.",
+"Prefiro rotinas rígidas e me incomodo muito quando elas mudam.",
+"Tenho interesses muito intensos e específicos que absorvem horas do meu dia.",
+"Incomodo-me muito com sons, luzes, texturas ou cheiros.",
+"Tenho dificuldade de iniciar ou manter conversas, ou me sinto “diferente” dos outros.",
+"Preciso ensaiar ou imitar comportamentos para me adaptar socialmente.",
+"Aprendo assuntos novos mais rápido do que a maioria das pessoas.",
+"Percebo conexões entre ideias que outras pessoas não percebem.",
+"Entedio-me com tarefas rotineiras ou pouco desafiadoras.",
+"Tenho curiosidade intensa e me aprofundo em vários assuntos.",
+"Tenho perfeccionismo ou autocobrança elevados.",
+"Já me descreveram como muito criativo(a) ou com raciocínio acima da média.",
+"Sinto ansiedade ou preocupação difíceis de controlar.",
+"Sinto desânimo ou perda de interesse pelas coisas.",
+"Durmo mal.",
+"Minha mente fica acelerada à noite e atrapalha o sono.",
+"Uso cafeína, álcool ou outras substâncias para conseguir focar ou relaxar.",
+"Sinto que rendo abaixo do meu potencial.",
+"Já me chamaram de “distraído(a)”, “preguiçoso(a)” ou “desorganizado(a)”.",
+"?Minhas dificuldades estão me causando sofrimento?",
+"~Gostaria de treinar atenção, memória e organização com exercícios guiados?"];
+
+// ---------- TRILHAS E DOMÍNIOS (nome, item inicial, item final; numeração 1-based dentro da trilha) ----------
+const CM=[["Atenção",1,6],["Memória",7,11],["Funções executivas",12,20],["Autonomia e rotina",21,25],["Bem-estar e impacto",26,28]];
+const TR=[
+{n:"Sou responsável por uma criança ou adolescente",o:1,i:C.concat(A),d:CM.concat([["Hiperatividade e impulsividade",37,40],["Comunicação e social",41,46],["Aprendizagem",47,49],["Altas habilidades",51,56],["Emocional e comportamento",57,60]])},
+{n:"Sou responsável por uma pessoa idosa",o:1,i:C.concat(B),d:CM.concat([["Memória e orientação",37,42],["Atividades da vida diária",43,48],["Julgamento e funções executivas",49,52],["Humor, comportamento e sono",53,57]])},
+{n:"Sou adulto(a) e vou responder sobre mim",o:0,i:AD,d:[["Atenção",7,13],["Hiperatividade e impulsividade",14,18],["Memória",19,23],["Funções executivas",25,33],["Rotina e tarefas diárias",34,38],["Comunicação e social",39,45],["Altas habilidades",46,51],["Humor, comportamento e sono",52,56],["Impacto",57,58]]}];
+
+// descrição do domínio, apoio do Valyza (vazio = sem sugestão do app)
+const D={
+"Atenção":["manter o foco e resistir a distrações","exercícios de atenção sustentada e seletiva"],
+"Memória":["guardar e lembrar informações do dia a dia","treinos de memória de trabalho e de evocação"],
+"Funções executivas":["planejar, organizar, iniciar tarefas e se adaptar a mudanças","treinos de planejamento, organização e flexibilidade cognitiva"],
+"Autonomia e rotina":["a independência nas tarefas e rotinas diárias","atividades que treinam sequenciar passos e manter rotinas"],
+"Bem-estar e impacto":["o cansaço mental, o sono e o impacto das dificuldades no dia a dia","treinos graduais que reduzem o desgaste mental"],
+"Hiperatividade e impulsividade":["a agitação e o controle de impulsos","exercícios de controle inibitório e autorregulação"],
+"Comunicação e social":["a comunicação, a interação social e a sensibilidade a estímulos","atividades de flexibilidade cognitiva e leitura de contextos"],
+"Aprendizagem":["leitura, escrita e raciocínio matemático","treinos cognitivos de apoio à aprendizagem"],
+"Altas habilidades":["aprendizagem rápida, curiosidade e criatividade acima do esperado",""],
+"Emocional e comportamento":["a regulação emocional e o comportamento","atividades de autorregulação emocional"],
+"Memória e orientação":["a memória recente e a orientação no tempo e no espaço","estimulação de memória e orientação"],
+"Atividades da vida diária":["a autonomia para cuidar de si, da casa e do dinheiro","treinos funcionais que apoiam a autonomia"],
+"Julgamento e funções executivas":["julgamento, planejamento e raciocínio","exercícios de planejamento e raciocínio"],
+"Humor, comportamento e sono":["o humor, o comportamento e o sono",""],
+"Rotina e tarefas diárias":["a manutenção de rotinas, prazos e obrigações","treinos de organização e planejamento"],
+"Impacto":["o impacto das dificuldades no desempenho e na autoestima",""]};
+const FL=["Baixa","Moderada","Alta"],COR=["#13A89E","#E0A100","#D1495B"];
+const F=["Nunca","Raramente","Às vezes","Frequentemente","Sempre"],S=["Sim","Não","Não sei"];
+const $=document.getElementById("app");
+let k,i,a,nome="";
+const isS=s=>/^[?~]/.test(s);
+const clean=s=>s.replace(/^[?~]/,"").replace(/\[de nome\]/g,nome?"de "+nome:"da pessoa").replace(/\[nome\]/g,nome||"a pessoa").replace(/^./,c=>c.toUpperCase());
+
+function home(){
+$.innerHTML=`<div class="card"><h1>Valyza</h1>
+<p>Triagem de funções cognitivas e executivas: atenção, memória, organização, autonomia e sinais de neurodesenvolvimento.</p>
+<p class="sm">São 60 perguntas objetivas, cerca de 9 minutos. Ao final você recebe um perfil com indicações de como o Valyza poderá ajudar.</p>
+<h2>Quem vai responder?</h2>
+${TR.map((t,j)=>`<button class="btn" onclick="pick(${j})">${t.n}</button>`).join("")}
+<p class="sm">Versão de teste. Esta triagem não é diagnóstico e não substitui avaliação profissional.</p></div>`}
+
+function pick(j){k=j;
+if(TR[j].o){$.innerHTML=`<div class="card"><h2>Nome da pessoa avaliada</h2>
+<p class="sm">Opcional. Usado apenas para personalizar as perguntas.</p>
+<input id="nm" maxlength="40" placeholder="Ex.: Maria"><button class="btn pri" onclick="go()">Começar</button>
+<button class="lnk" onclick="home()">← Voltar</button></div>`}else go()}
+
+function go(){const e=document.getElementById("nm");nome=e?e.value.replace(/[<>&"]/g,"").trim():"";i=0;a=[];show()}
+
+function show(){const t=TR[k],n=t.i.length;if(i>=n)return result();
+const s=t.i[i],op=isS(s)?S:F;
+$.innerHTML=`<div class="card"><div class="bar"><i style="width:${i/n*100}%"></i></div>
+<div class="sm">Pergunta ${i+1} de ${n}</div>
+<div class="q">${clean(s)}</div>
+<div class="sm">${isS(s)?"Escolha uma opção:":"Nos últimos 6 meses, com que frequência isso acontece?"}</div>
+${op.map((o,j)=>`<button class="btn" onclick="ans(${j})">${o}</button>`).join("")}
+<button class="lnk" onclick="back()">← Voltar</button></div>`}
+
+function ans(v){a[i]=v;i++;show()}
+function back(){if(i>0){i--;show()}else home()}
+
+function result(){const t=TR[k];
+const ds=t.d.map(([n,f,e])=>{let s=0,c=0;for(let j=f-1;j<e;j++){if(a[j]!=null){s+=a[j];c++}}
+const m=c?s/c:0;return{n,m,f:m<1.5?0:m<2.5?1:2,ah:n==="Altas habilidades"}});
+const sinais=t.i.map((s,j)=>s[0]==="?"&&a[j]===0?clean(s):null).filter(Boolean);
+const ajuda=ds.filter(d=>!d.ah&&d.f>0&&D[d.n][1]).sort((x,y)=>y.m-x.m).slice(0,3);
+const txt=d=>{const x=D[d.n][0];return d.ah?["Poucos indicadores de ","Alguns indicadores de ","Muitos indicadores de "][d.f]+x+(d.f==2?". Pode valer uma avaliação especializada para mapear esse perfil.":"."):["Poucos indicadores de dificuldade em ","Alguns indicadores de dificuldade em ","Muitos indicadores de dificuldade em "][d.f]+x+(d.f==2?". Vale conversar com um profissional para uma avaliação mais detalhada.":".")};
+$.innerHTML=`<div class="card"><h1>Seu perfil de triagem</h1>
+<p class="sm">${nome?"Resultado referente a "+nome+". ":""}Quanto maior a barra, mais indicadores foram observados.</p>
+${ds.map(d=>`<div class="dom"><b><span>${d.n}</span><span style="color:${d.ah?"#3B6EA5":COR[d.f]}">${FL[d.f]}</span></b>
+<div class="tr"><i style="width:${Math.max(d.m/4*100,4)}%;background:${d.ah?"#3B6EA5":COR[d.f]}"></i></div>
+<span class="sm">${txt(d)}</span></div>`).join("")}
+${sinais.length?`<h2>Pontos do histórico para conversar com um profissional</h2><ul>${sinais.map(s=>`<li>${s.replace(/\?$/,"")}</li>`).join("")}</ul>`:""}
+<h2>Como o Valyza poderá ajudar</h2>
+${ajuda.length?`<ul>${ajuda.map(d=>`<li><b>${d.n}:</b> ${D[d.n][1]}.</li>`).join("")}</ul>`:`<p>Não foram identificadas áreas com muitos indicadores de dificuldade. O Valyza também poderá apoiar a manutenção e o estímulo cognitivo.</p>`}
+<div class="aviso">Esta triagem não é diagnóstico e não substitui avaliação com psicólogo, neuropsicólogo ou médico. Se estiver em sofrimento, ligue para o CVV: 188 (24 horas). Versão de teste: textos provisórios.</div>
+<button class="btn pri" style="margin-top:20px" onclick="home()">Refazer o questionário</button></div>`}
+home();
+</script>
+</body>
+</html>
