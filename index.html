@@ -95,10 +95,10 @@ details p{margin:0;padding:0 22px 18px;line-height:1.6}
 .rec{position:absolute;top:22px;right:22px;background:#f2fdff;color:var(--n);border-radius:999px;padding:8px 20px;font-size:1rem}
 input#nm{width:100%;padding:18px 20px;font:inherit;font-size:1.1rem;border:2px solid #bfe3e9;border-radius:18px;background:#f2fdffe6;margin:0 0 18px;color:var(--n)}
 input#nm:focus{outline:0;border-color:var(--t)}
-.rt{text-align:right}.st .cta{font-size:1.4rem}
+.rt{display:flex;justify-content:space-between;align-items:center;gap:12px}.bk{margin-top:26px}.st .cta{font-size:1.4rem}
 .qtop{display:flex;justify-content:space-between;font-size:.92rem;margin-bottom:8px}
 .seg{display:flex;gap:6px;margin-bottom:18px}.seg div{height:7px;background:#ffffffa6;border-radius:6px;overflow:hidden}.seg i{display:block;height:100%;background:var(--n);transition:width .3s}
-.qw{display:grid;grid-template-columns:1fr 210px;gap:18px;align-items:end}
+.qw{display:block}
 .qc{position:relative;overflow:hidden;padding:28px 32px}
 .qc::before{content:"";position:absolute;left:0;right:0;top:0;height:4px;background:linear-gradient(90deg,var(--n),var(--t))}
 .qc .q{font-size:clamp(1.35rem,2.8vw,1.8rem);font-weight:700;line-height:1.25;max-width:640px;margin:16px 0 14px;position:relative}
@@ -353,7 +353,6 @@ const isS=s=>/^[?~]/.test(s);
 const clean=s=>s.replace(/^[?~]/,"").replace(/\[de nome\]/g,nome?"de "+nome:"da pessoa").replace(/\[nome\]/g,nome||"a pessoa").replace(/^./,c=>c.toUpperCase());
 
 let inQ=0,auto=true;
-const AVT=document.querySelector(".av2").src;
 const LB={"Atenção":"Atenção e foco","Memória":"Memória","Funções executivas":"Funções executivas","Autonomia e rotina":"Autonomia e rotina","Bem-estar e impacto":"Bem-estar e impacto","Hiperatividade e impulsividade":"Agitação e impulsos","Comunicação e social":"Comunicação e convivência","Aprendizagem":"Aprendizagem","Altas habilidades":"Curiosidade e talentos","Emocional e comportamento":"Emoções e comportamento","Memória e orientação":"Memória e orientação","Atividades da vida diária":"Vida diária","Julgamento e funções executivas":"Decisões e planejamento","Humor, comportamento e sono":"Humor e sono","Rotina e tarefas diárias":"Rotina e tarefas","Impacto":"Impacto no dia a dia","Histórico":"Histórico e contexto"};
 const P={t:'<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/>',c:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',l:'<path d="M4 7l2 2 3-3M4 17l2 2 3-3M13 8h7M13 18h7"/>',h:'<path d="M3 11l9-8 9 8M5 10v10h14V10"/>',e:'<path d="M12 20s-8-5-8-11a4.5 4.5 0 018-2.5A4.5 4.5 0 0120 9c0 6-8 11-8 11z"/>',b:'<path d="M13 3L5 14h6l-1 7 8-11h-6z"/>',u:'<circle cx="9" cy="8" r="3"/><path d="M3 20c0-3.5 3-5 6-5s6 1.5 6 5"/><circle cx="17" cy="9" r="2.5"/>',k:'<path d="M4 5h6a2 2 0 012 2v13a2 2 0 00-2-2H4zM20 5h-6a2 2 0 00-2 2v13a2 2 0 012-2h6z"/>',s:'<path d="M12 3l2.5 6 6 2.5-6 2.5L12 20l-2.5-6-6-2.5 6-2.5z"/>',m:'<path d="M20 14A8 8 0 1110 4a6.5 6.5 0 0010 10z"/>',p:'<rect x="6" y="4" width="12" height="17" rx="2"/><path d="M9 4h6v3H9zM9 12h6M9 16h4"/>'};
 const IC={"Atenção":"t","Memória":"c","Funções executivas":"l","Autonomia e rotina":"h","Bem-estar e impacto":"e","Hiperatividade e impulsividade":"b","Comunicação e social":"u","Aprendizagem":"k","Altas habilidades":"s","Emocional e comportamento":"e","Memória e orientação":"c","Atividades da vida diária":"h","Julgamento e funções executivas":"l","Humor, comportamento e sono":"m","Rotina e tarefas diárias":"l","Impacto":"e","Histórico":"p"};
@@ -365,12 +364,12 @@ const order=(t,xs)=>t.d.map(d=>d[0]).concat("Histórico").flatMap(n=>xs.filter(x
 const hd=()=>{document.getElementById("qx").textContent=inQ?"Sair do teste":"Voltar ao início"};
 
 function view(n,t,p,h){inQ=0;LD.hidden=true;Q.hidden=false;hd();
-$.innerHTML=`<section class="st"><div class="steps">${["Perfil","Versão","Nome"].map((s,j)=>`<span class="${j<n?"on":""}">${s}</span>`).join("")}</div><h1>${t}</h1><p class="sub">${p}</p>${h}</section>`;scrollTo(0,0)}
+$.innerHTML=`<section class="st"><div class="steps">${["Perfil","Versão","Nome"].map((s,j)=>`<span class="${j<n?"on":""}">${s}</span>`).join("")}</div><h1>${t}</h1><p class="sub">${p}</p>${h}${n<3?`<div class="bk"><button class="nb" onclick="${n<2?"land()":"home()"}">← Voltar</button></div>`:""}</section>`;scrollTo(0,0)}
 function land(){inQ=0;Q.hidden=true;LD.hidden=false;scrollTo(0,0)}
 function sair(){if(!inQ||confirm("Sair do teste? As respostas dadas até agora serão perdidas."))land()}
 
 function home(){view(1,"Para quem vamos criar este mapeamento?","Escolha o perfil da pessoa que será avaliada para personalizarmos as perguntas e o seu relatório.",
-`<div class="g3">${[["Para mim mesmo(a)","Sou adulto e vou responder.","M12 12a4 4 0 100-8 4 4 0 000 8zM4 21c0-4 3.5-6 8-6s8 2 8 6"],["Para uma criança ou adolescente","Sou o responsável e responderei por ele(a).","M12 10a3 3 0 100-6 3 3 0 000 6zM8 21v-5a4 4 0 018 0v5"],["Para uma pessoa idosa","Sou familiar ou cuidador(a) e responderei por ela.","M10 8a3 3 0 100-6 3 3 0 000 6zM6 22v-7a4 4 0 018 0v7M18 12v10M16 12h2"]].map((c,j)=>`<button class="pc" onclick="pick(${j})"><svg viewBox="0 0 24 24"><path d="${c[2]}"/></svg><b>${c[0]}</b><span>${c[1]}</span></button>`).join("")}</div>`)}
+`<div class="g3">${[["Para mim mesmo(a)","Sou adulto e vou responder.","M12 12a4 4 0 100-8 4 4 0 000 8zM4 21c0-4 3.5-6 8-6s8 2 8 6"],["Para uma criança ou adolescente","Sou o responsável e responderei por ele(a).","M12 10a3 3 0 100-6 3 3 0 000 6zM8 21v-5a4 4 0 018 0v5"],["Para uma pessoa idosa","Sou familiar ou cuidador(a) e responderei por ela.","M10 8a3 3 0 100-6 3 3 0 000 6zM6 22v-7a4 4 0 018 0v7M18 12v10M16 12h2"]].map((c,j)=>`<button class="pc" onclick="pick(${[2,0,1][j]})"><svg viewBox="0 0 24 24"><path d="${c[2]}"/></svg><b>${c[0]}</b><span>${c[1]}</span></button>`).join("")}</div>`)}
 
 function pick(j){k=j;choose()}
 
@@ -379,7 +378,7 @@ function choose(){view(2,"Qual nível de detalhamento você prefere?","Ambas as 
 <button class="mc dk" onclick="mode('completa')"><small>Completo</small><span class="rec">Recomendado</span><h3>64 perguntas</h3><p>Uma visão mais detalhada das funções cognitivas e executivas.</p><em>${CK}Aproximadamente 10 minutos.</em></button></div>`)}
 
 function mode(m){modo=m;const o=TR[k].o;view(3,o?"Como devemos chamar a pessoa avaliada?":"Como podemos te chamar?",o?"Usaremos esse nome apenas para deixar as perguntas mais amigáveis e naturais. (Opcional)":"Usaremos esse nome apenas para personalizar o seu resultado. (Opcional)",
-`<input id="nm" maxlength="40" placeholder="Digite o nome ou apelido..." onkeydown="if(event.key==='Enter')begin()"><div class="rt"><button class="cta" onclick="begin()">Iniciar teste</button></div>`);document.getElementById("nm").focus()}
+`<input id="nm" maxlength="40" placeholder="Digite o nome ou apelido..." onkeydown="if(event.key==='Enter')begin()"><div class="rt"><button class="nb" onclick="choose()">← Voltar</button><button class="cta" onclick="begin()">Iniciar teste</button></div>`);document.getElementById("nm").focus()}
 
 function begin(){nome=document.getElementById("nm").value.replace(/[<>&"]/g,"").trim();const t=TR[k];
 L=order(t,modo==="rapida"?t.q:t.i.map((_,j)=>j+1));i=0;a=[];show()}
@@ -391,8 +390,7 @@ const seg=gs.map(o=>`<div style="flex:${o.c}"><i style="width:${Math.min(Math.ma
 $.innerHTML=`<div class="qtop"><span>Pergunta <b>${i+1}</b> de ${n}</span><span>${Math.round(i/n*100)}% concluído · cerca de ${Math.max(1,Math.ceil((n-i)*9/60))} min</span></div><div class="seg">${seg}</div>
 <div class="qw"><div class="card qc"><div class="pill"><svg viewBox="0 0 24 24">${P[IC[g]]}</svg>${LB[g]}</div><span class="gn">${String(i+1).padStart(2,"0")}</span>
 <div class="q">${clean(s)}</div>${S3?"":`<div class="sm">Nos últimos 6 meses, com que frequência isso acontece?</div>`}
-<div class="ops">${op.map((o,j)=>`<button class="op${cur===j?" sel":""}" onclick="pa(${j})">${S3?sic[j]:bars(j)}<span>${o}</span><span class="rd"></span></button>`).join("")}</div></div>
-<aside class="as"><div class="bal">Responda com calma. Não existem respostas certas ou erradas.</div><img src="${AVT}" alt=""></aside></div>
+<div class="ops">${op.map((o,j)=>`<button class="op${cur===j?" sel":""}" onclick="pa(${j})">${S3?sic[j]:bars(j)}<span>${o}</span><span class="rd"></span></button>`).join("")}</div></div></div>
 <div class="qn"><button class="nb" onclick="back()">← Voltar</button><label class="sw"><input type="checkbox" ${auto?"checked":""} onchange="auto=this.checked"><i></i>Avançar ao responder</label><button class="nb go" onclick="nx()" ${cur==null?"disabled":""}>${i===n-1?"Ver resultado":"Avançar"} →</button></div>`}
 
 function pa(v){a[L[i]]=v;if(auto){document.querySelectorAll(".op").forEach((e,j)=>e.classList.toggle("sel",j===v));setTimeout(nx,200)}else show()}
